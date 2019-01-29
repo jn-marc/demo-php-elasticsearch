@@ -81,6 +81,7 @@ if ( isset( $_POST['first_name'] ) && isset( $_POST['last_name'] ) ) {
 <?php } else {
       print("<h2>Employee ". $first_name . " " . $last_name . " inserted in database</h2>");
  }  ?>
+ <a href=/list.php>Employee List</a>
 	</div>
 	<img id="bottom" src="/media/bottom.png" alt="">
 	</body>
