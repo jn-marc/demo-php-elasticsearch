@@ -7,17 +7,26 @@ include 'es_hosts.php';
 $first_name = '';
 $last_name = '';
 
-if ( isset( $POST['first_name'] ) && isset( $POST['last_name'] ) ) {
-  $first_name = $POST['first_name'];
-  $last_name = $POST['last_name'];
 
-  $client = ClientBuilder::create()
+if ( isset( $_POST['first_name'] ) && isset( $_POST['last_name'] ) ) {
+  $first_name = $_POST['first_name'];
+  $last_name = $_POST['last_name'];
+
+
+  try {
+    $client = ClientBuilder::create()
                       ->setHosts($hosts)
                       ->build();
+  } catch (Elasticsearch\Common\Exceptions\NoNodesAvailableException $e) {
+    print_r($e);
+    die();
+  }
+
 
 
   $params = [
       'index' => 'employees',
+      'type' => 'employee',
       'body' => ['first_name' => $first_name, 'last_name' => $last_name]
   ];
 
@@ -41,9 +50,9 @@ if ( isset( $POST['first_name'] ) && isset( $POST['last_name'] ) ) {
 
 	<img id="top" src="/media/top.png" alt="">
 	<div id="form_container">
-
+<?php if ( ! isset( $_POST['first_name'] ) ) { ?>
 		<h1><a>New Employee</a></h1>
-		<form id="form_46806" class="appnitro"  method="post" action="">
+		<form id="form_46806" class="appnitro"  method="post" action="/index.php">
 					<div class="form_description">
 			<h2>New Employee</h2>
 			<p>Add new employee to the database</p>
@@ -69,6 +78,9 @@ if ( isset( $POST['first_name'] ) && isset( $POST['last_name'] ) ) {
 		</li>
 			</ul>
 		</form>
+<?php } else {
+      print("<h2>Employee ". $first_name . " " . $last_name . " inserted in database</h2>");
+ }  ?>
 	</div>
 	<img id="bottom" src="/media/bottom.png" alt="">
 	</body>
